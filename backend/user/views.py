@@ -36,13 +36,13 @@ def get_combat_history(request):
     api.login('your_sso_token')
 
      # retrieving combat history
-    hist = api.Warzone.combatHistory(platforms.Battlenet, User.gamer_tag) # returns data of type dict
+    hist = api.Warzone.combatHistory(platforms.PSN, User.gamer_tag) # returns data of type dict
     async def get_combat_history():
         # login in with sso token
         await api.loginAsync('your_sso_token')
 
         # retrieving combat history
-        hist = await api.Warzone.combatHistoryAsync(platforms.Battlenet, "Username#1234") # returns data of type dict
+        hist = await api.Warzone.combatHistoryAsync(platforms.PSN, "Username#1234") # returns data of type dict
 
         # return results in json
         return JsonResponse(hist)
