@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from .forms import CodInfoForm
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.status import HTTP_201_CREATED,HTTP_202_ACCEPTED,HTTP_400_BAD_REQUEST,HTTP_404_NOT_FOUND
 
 # Create your views here.
 # @login_required
@@ -45,6 +46,17 @@ class UserListView(APIView):
         queryset = User.objects.all()
         userSerializer = UserSerializer(queryset, many = True)
         return Response(userSerializer.data) 
+    
+class UserCreateView(APIView):
+    def post(self,request):
+        userSerializer = UserSerializer(data = request.data)
+        if userSerializer.is_valid():
+            userSerializer.save()
+            return Response(userSerializer.data, status = HTTP_201_CREATED)
+        return Response(userSerializer.errors, status = HTTP_400_BAD_REQUEST)
+
+
+
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
