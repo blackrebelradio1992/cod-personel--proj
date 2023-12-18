@@ -6,45 +6,49 @@ from rest_framework import generics
 from .serializers import UserSerializer
 from django.shortcuts import render, redirect
 from .forms import CodInfoForm
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 # Create your views here.
-@login_required
-def update_cod_info(request):
-    if request.method == 'POST':
-        form = CodInfoForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
+# @login_required
+# def update_cod_info(request):
+#     if request.method == 'POST':
+#         form = CodInfoForm(request.POST)
+#         if form.is_valid():
+#             user = form.save(commit=False)
 
-            # Connect to Call of duty API
-            cod_api = API()
-            cod_api.login(user.cod_sso_token)
+#             # Connect to Call of duty API
+#             cod_api = API()
+#             cod_api.login(user.cod_sso_token)
 
-            # Fetch Call of Duty data based on user input
-            user_cod_info = cod_api.Me.info
-            # You can fetch more specifi data based on the API documentation
+#             # Fetch Call of Duty data based on user input
+#             user_cod_info = cod_api.Me.info
+#             # You can fetch more specifi data based on the API documentation
 
-            # update the user profile with Call of Duty data
-            user.safe()
+#             # update the user profile with Call of Duty data
+#             user.safe()
 
-            return redirect('profile') # Redirect to user profile page
-    else:
-        form = CodInfoForm()
+#             return redirect('profile') # Redirect to user profile page
+#     else:
+#         form = CodInfoForm()
 
-    return render(request, 'update_cod_info.html', {'form': form})
-
-
+#     return render(request, 'update_cod_info.html', {'form': form})
 
 
 
 
 
-# class UserListView(generics.ListCreateAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
 
-# class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
+
+class UserListView(APIView):
+    def get(self,request):
+        queryset = User.objects.all()
+        userSerializer = UserSerializer(queryset, many = True)
+        return Response(userSerializer.data) 
+
+class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 # @login_required
 # def get_user_info(request):

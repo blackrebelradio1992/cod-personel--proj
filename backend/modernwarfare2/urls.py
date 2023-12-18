@@ -1,8 +1,7 @@
-# coldwar/urls.py
+from django.urls import path
+from .views import modern_warfare2_profile
 
-from rest_framework.routers import DefaultRouter
-from .views import ModernWarfareData2ViewSet
-
-router = DefaultRouter()
-router.register(r'Modernwarfare2', ModernWarfareData2ViewSet, basename='modernwarfare2data')
-urlpatterns = router.urls
+urlpatterns = [
+    path('modern-warfare2-profile/', modern_warfare2_profile, name='modern_warfare2_profile'),
+    # Add other URL patterns as needed
+]

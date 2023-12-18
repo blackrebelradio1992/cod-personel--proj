@@ -6,9 +6,22 @@ from .models import ModernWarfare2Data
 from rest_framework import viewsets
 from .models import ModernWarfare2Data
 from . serializers import ModernWarfare2DataSerializer
+from user.models import User
 
 
 # Create your views here.
+def modern_warfare2_profile(request):
+    user_name = request.user_name
+
+    mw2_data = ModernWarfare2Data.objects.get(user=user_name)
+
+    context = {
+        'user_name': user_name,
+        'mw2_data': mw2_data,
+    }
+
+    return render(request, 'modern_warfare_profile.html', context)
+
 class ModernWarfareData2ViewSet(viewsets.ModelViewSet):
     queryset = ModernWarfare2Data.objects.all()
     serializer_class = ModernWarfare2DataSerializer
