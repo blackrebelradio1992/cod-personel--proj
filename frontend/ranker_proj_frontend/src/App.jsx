@@ -1,32 +1,12 @@
-import React from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
-import UserForm from "./components/UserForm";
+import Navbar from "/Users/frankjr./Desktop/COD-personel-proj/frontend/ranker_proj_frontend/src/components/Navbar.jsx"
+import { Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-function App() {
+export default function App() {
   return (
-    <div>
-      <Navbar bg="light" expand="lg">
-        <Container>
-          <Navbar.Brand href="#home">Your App</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#link">Link</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-
-      <Container>
-        <h1>User Registration</h1>
-        <div>
-          {/* Your other components or content here */}
-          <UserForm />
-        </div>
-      </Container>
-    </div>
+    <>
+      <Navbar />
+      <Outlet />
+    </>
   );
 }
-
-export default App;

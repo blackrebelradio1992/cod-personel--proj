@@ -10,7 +10,7 @@ const UserForm = () => {
     });
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.user_name]: string, [e.cod_sso_token]: String, [e.gamer_tag]: string, [e.cod_platform]: string})
+        setFormData({ ...formData, [e.target.name]: e.target.value })
     };
 
     const handleSubmit = async (e) => {
@@ -25,30 +25,36 @@ const UserForm = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>
-                Username:
-                <input type="text" name="username" />
-            </label><br />
-            <label>
-                SSO Token:
-                <input type="text" name="sso_token" />
-            </label><br />
-            <label>
-                Gamer Tag:
-                <input type="text" name="gamer_tag" />
-            </label><br />
-          <label for="cars">Choose a platform:</label>
-                <select id="Platforms" name="platforms">
-                <option value="all">All</option>
-                <option value="battlenet">Battlenet</option>
-                <option value="psn">PSN</option>
-                <option value="steam">Steam</option>
-                <option value="uno">Uno</option>
-                <option value="xbox">XBOX</option>
+        <div>
+            <h1>
+            User Registration
+            </h1>
+            <form onSubmit={handleSubmit}>
+                <label>
+                    Username:
+                    <input type="text" name="user_name" onChange={handleChange} />
+                </label><br />
+                <label>
+                    SSO Token:
+                    <input type="text" name="cod_sso_token" onChange={handleChange} />
+                </label><br />
+                <label>
+                    Gamer Tag:
+                    <input type="text" name="gamer_tag" onChange={handleChange} />
+                </label><br />
+                <label for="platforms">Choose a platform:</label>
+                <select id="platforms" name="cod_platform" onChange={handleChange}>
+                    <option value="all">All</option>
+                    <option value="battlenet">Battlenet</option>
+                    <option value="psn">PSN</option>
+                    <option value="steam">Steam</option>
+                    <option value="uno">Uno</option>
+                    <option value="xbox">XBOX</option>
                 </select><br></br>
-          <button type="submit">Submit</button>
-        </form>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+
       );
 };
 
