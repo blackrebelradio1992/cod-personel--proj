@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import UserForm from "./components/UserForm";
 import WelcomePage from "./components/userwelcom";
+import CustomNavbar from "./components/Navbar";
 
 const App = () => {
     const [authenticated, setAuthenticated] = useState(false);
@@ -10,6 +11,9 @@ const App = () => {
 
     return (
         <div>
+          <div>
+            <CustomNavbar />
+          </div>
             {authenticated ? (
                 <WelcomePage username={username} />
             ) : (
