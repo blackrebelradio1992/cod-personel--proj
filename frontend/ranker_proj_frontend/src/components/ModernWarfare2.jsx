@@ -6,12 +6,15 @@ const ModernWarfare2Component = () => {
   const [data, setData] = useState([]);
   const [formData, setFormData] = useState({
     // Define form fields here
+    gamer_tag: '',
+     
   });
 
   const fetchData = async () => {
     try {
       const response = await axios.get('http://localhost:8000/api/modernwarfare2/');
       setData(response.data);
+      console.log(setData)
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -28,6 +31,7 @@ const ModernWarfare2Component = () => {
       const response = await axios.post('http://localhost:8000/api/modernwarfare2/', formData);
       // Handle success, e.g., update state or show a notification
       console.log('Data posted successfully:', response.data);
+      console.log(response.data)
 
       // Refetch data to display the updated list
       fetchData();

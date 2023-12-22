@@ -1,12 +1,22 @@
-import Navbar from "/Users/frankjr./Desktop/COD-personel-proj/frontend/ranker_proj_frontend/src/components/Navbar.jsx"
-import { Outlet } from "react-router-dom";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import UserForm from "./components/UserForm";
+import WelcomePage from "./components/userwelcom";
 
-export default function App() {
-  return (
-    <>
-      <Navbar />
-      <Outlet />
-    </>
-  );
-}
+const App = () => {
+    const [authenticated, setAuthenticated] = useState(false);
+    const [username, setUsername] = useState('');
+
+    // You may have a function to check authentication status and set the state
+
+    return (
+        <div>
+            {authenticated ? (
+                <WelcomePage username={username} />
+            ) : (
+                <UserForm setAuthenticated={setAuthenticated} setUsername={setUsername} />
+            )}
+        </div>
+    );
+};
+
+export default App;

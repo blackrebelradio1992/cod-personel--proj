@@ -4,6 +4,8 @@ import UserForm from './components/UserForm.jsx';
 import Error404Page from './components/Error404Page.jsx';
 import HomePage from './components/HomePage.jsx';
 import UserPage from './components/UserPage.jsx';
+import ModernWarfare2Component from './components/ModernWarfare2.jsx';
+import LoginPage from './components/LoginPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -21,6 +23,14 @@ const router = createBrowserRouter([
       {
         path: '/profile',
         element: <UserPage />,
+      },
+      {
+        path: '/modernwarfare2',
+        element: <ModernWarfare2Component />,
+      },
+      {
+        path: '/login',
+        element: <LoginPage />, 
       },
     ],
     errorElement: <Error404Page />,

@@ -7,16 +7,18 @@ from rest_framework import viewsets
 from .models import ModernWarfare2Data
 from . serializers import ModernWarfare2DataSerializer
 from user.models import User
+from django.shortcuts import render, get_object_or_404
 
 
 # Create your views here.
 def modern_warfare2_profile(request):
-    user_name = request.user_name
+    user = request.user
 
-    mw2_data = ModernWarfare2Data.objects.get(user=user_name)
+    mw2_data = get_object_or_404(ModernWarfare2Data, user=user)
+    # mw2_data = ModernWarfare2Data.objects.get(user=user_name)
 
     context = {
-        'user_name': user_name,
+        'user': user,
         'mw2_data': mw2_data,
     }
 

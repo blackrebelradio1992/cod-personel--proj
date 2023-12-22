@@ -1,8 +1,7 @@
-// UserPage.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const UserPage = () => {
+const UserPage = ({ onDelete }) => {
   const [formData, setFormData] = useState({
     id: null,
     user_name: '',
@@ -10,37 +9,105 @@ const UserPage = () => {
     cod_platform: '',
   });
   const [loading, setLoading] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+
+  const [username, setUsername] = useState('');
+  const [userId, setUserId] = useState(null);
+  const [otherProfileData, setOtherProfileData] = useState(null);
 
   useEffect(() => {
-    // Fetch user information from the backend and populate the form
-    axios.get('http://localhost:8000/api/users/1/')  // Use the appropriate user ID
-      .then(response => {
-        setFormData(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching user data:', error);
-      });
-  }, []);
+    if (userId) {
+      // Fetch user information from the backend and populate the form
+      axios.get(`http://localhost:8000/user/users/${userId}/`)
+        .then(response => {
+          setFormData(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching user data:', error);
+        });
+    }
+  }, [userId]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
-    // Make a PUT request to update user information
-    axios.put(`http://localhost:8000/api/users/${formData.id}/`, formData)
+    try {
+        const response = await axios.post('http://localhost:8000/user/users/create', formData);
+        console.log('User created successfully:', response.data);
+
+        // Set authentication status and username
+        setAuthenticated(true);
+        setUsername(response.data.user_name);
+
+        // Redirect to the welcome page or update the state to render the welcome page
+        // You may use React Router for redirection
+    } catch (error) {
+        // Existing error handling...
+    }
+};
+
+  const handleDeleteClick = () => {
+    const isConfirmed = window.confirm('Are you sure you want to delete your profile?');
+
+    if (isConfirmed) {
+      // Call the backend API to delete the user profile
+      axios.delete(`http://localhost:8000/user/users/${userId}/delete/`)
+        .then(() => {
+          // Inform the parent component (or handle deletion as needed)
+          onDelete();
+          console.log('Profile deleted successfully');
+        })
+        .catch(error => {
+          console.error('Error deleting profile:', error);
+        });
+    }
+  };
+
+  const handleChangePasswordClick = () => {
+    setShowChangePassword(true);
+  };
+
+  const handleConfirmPasswordChange = () => {
+    // Call the backend API to change the password
+    axios.post(`http://localhost:8000/user/users/${userId}/change-password/`, {
+      old_password: oldPassword,
+      new_password: newPassword,
+    })
+    .then(response => {
+      // Optionally, you can handle the success case, e.g., show a success message
+      console.log(response.data.message);
+      // You may want to hide the change password fields after a successful change
+      setShowChangePassword(false);
+    })
+    .catch(error => {
+      console.error('Error changing password:', error);
+    });
+  };
+
+  const handleGetUserIdClick = () => {
+    // Call the backend API to get the user ID by username
+    axios.get(`http://localhost:8000/user/get-user-id-by-username/${username}/`)
       .then(response => {
-        // Handle successful update
-        console.log('User information updated successfully:', response.data);
-        setLoading(false);
+        setUserId(response.data.user_id);
+
+        // Optionally, you can call another API endpoint to get other profile data based on the user ID
+        axios.get(`http://localhost:8000/user/users/${response.data.user_id}/`)
+          .then(profileResponse => {
+            setOtherProfileData(profileResponse.data);
+          })
+          .catch(error => {
+            console.error('Error fetching other profile data:', error);
+          });
       })
       .catch(error => {
-        // Handle error
-        console.error('Error updating user information:', error);
-        setLoading(false);
+        console.error('Error fetching user ID by username:', error);
+        // Optionally, you can handle the error case, e.g., show an error message
       });
   };
 
@@ -63,6 +130,7 @@ const UserPage = () => {
             value={formData.user_name}
             onChange={handleChange}
           />
+          <button type="button" onClick={handleGetUserIdClick}>Get User ID</button>
         </label><br />
         <label>
           Gamer Tag:
@@ -75,17 +143,45 @@ const UserPage = () => {
         </label><br />
         <label>
           Platform:
-          <input
+          <select
             type="text"
+            id="platforms"
             name="cod_platform"
             value={formData.cod_platform}
             onChange={handleChange}
-          />
+          >
+            <option>Choose Your Platform</option>
+            <option value="all">All</option>
+            <option value="battlenet">Battlenet</option>
+            <option value="psn">Playstation</option>
+            <option value="steam">Steam</option>
+            <option value="uno">Uno</option>
+            <option value="xbox">XBOX</option>
+          </select>
         </label><br />
         <button type="submit" disabled={loading}>
           {loading ? 'Updating...' : 'Update User Info'}
         </button>
       </form>
+      <div>
+        <button onClick={handleChangePasswordClick}>Change Password</button>
+      </div>
+      {showChangePassword && (
+        <div>
+          <div>
+            <label>Old Password: </label>
+            <input type="password" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} />
+          </div>
+          <div>
+            <label>New Password: </label>
+            <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+          </div>
+          <button onClick={handleConfirmPasswordChange}>Confirm Change</button>
+        </div>
+      )}
+      <div>
+        <button onClick={handleDeleteClick}>Delete Profile</button>
+      </div>
     </div>
   );
 };

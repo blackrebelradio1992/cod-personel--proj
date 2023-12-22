@@ -8,108 +8,102 @@ from django.shortcuts import render, redirect
 from .forms import CodInfoForm
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.status import HTTP_201_CREATED,HTTP_202_ACCEPTED,HTTP_400_BAD_REQUEST,HTTP_404_NOT_FOUND
+from rest_framework.status import HTTP_201_CREATED, HTTP_202_ACCEPTED, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_200_OK, HTTP_401_UNAUTHORIZED, HTTP_204_NO_CONTENT
+from django.contrib.auth import authenticate, login
 
 # Create your views here.
-# @login_required
-# def update_cod_info(request):
-#     if request.method == 'POST':
-#         form = CodInfoForm(request.POST)
-#         if form.is_valid():
-#             user = form.save(commit=False)
-
-#             # Connect to Call of duty API
-#             cod_api = API()
-#             cod_api.login(user.cod_sso_token)
-
-#             # Fetch Call of Duty data based on user input
-#             user_cod_info = cod_api.Me.info
-#             # You can fetch more specifi data based on the API documentation
-
-#             # update the user profile with Call of Duty data
-#             user.safe()
-
-#             return redirect('profile') # Redirect to user profile page
-#     else:
-#         form = CodInfoForm()
-
-#     return render(request, 'update_cod_info.html', {'form': form})
-
-
-
-
-
-
 
 class UserListView(APIView):
     def get(self,request):
         queryset = User.objects.all()
-        userSerializer = UserSerializer(queryset, many = True)
-        return Response(userSerializer.data) 
-    
+        userSerializer = UserSerializer(queryset, many=True)
+        return Response(userSerializer.data)
+
 class UserCreateView(APIView):
     def post(self,request):
-        userSerializer = UserSerializer(data = request.data)
+        userSerializer = UserSerializer(data=request.data)
         if userSerializer.is_valid():
             userSerializer.save()
-            return Response(userSerializer.data, status = HTTP_201_CREATED)
-        return Response(userSerializer.errors, status = HTTP_400_BAD_REQUEST)
+            return Response(userSerializer.data, status=HTTP_201_CREATED)
+        return Response(userSerializer.errors, status=HTTP_400_BAD_REQUEST)
+
+class UserUpdateView(APIView):
+    def put(self,request):
+        userSerializer = UserSerializer(data=request.data)
 
 
+class UserDetailView(APIView):
+    def put(self, request, pk):
+        queryset = User.objects.all()
+        user = User.objects.get(pk=pk)
+        userSerializer = UserSerializer(user, data=request.data)
+        if userSerializer.is_valid():
+            userSerializer.save()
+            return Response(userSerializer.data, status=HTTP_202_ACCEPTED)
+        return Response(userSerializer.errors, status=HTTP_400_BAD_REQUEST)
 
+class UserDeleteView(APIView):
+    def delete(self, request, pk):
+        try:
+            user = User.objects.get(pk=pk)
+            user.delete()
+            return Response(status=HTTP_204_NO_CONTENT)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=HTTP_404_NOT_FOUND)
 
-class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class TokenObtainPairView(APIView):
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username')
+        password = request.data.get('password')
 
-# @login_required
-# def get_user_info(request):
-#     api = API()
-#     api.login('your_sso_token')
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            # Generate and return tokens (you may use a library like Django Rest Framework SimpleJWT)
+            return Response({'access': 'your_access_token', 'refresh': 'your_refresh_token'}, status=HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid credentials'}, status=HTTP_401_UNAUTHORIZED)
 
-#     me_info = api.Me.info()
+class CurrentUserIdView(APIView):
+    def get(self, request):
+        return Response({'user_id': request.user.id})
 
-#     # If you created a model, you can save the information
-#     # Example: UserProfile.objects.update_or_create(user_id=me_info['id'], defaults={'username': me_info['username']})
+class GetUserIdByUsernameView(APIView):
+    def get(self, request, username):
+        try:
+            user = User.objects.get(username=username)
+            return Response({'user_id': user.id}, status=HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=HTTP_404_NOT_FOUND)
 
-#     return JsonResponse(me_info)
+class ChangePasswordView(APIView):
+    def post(self, request):
+        user = request.user
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
 
-# def get_combat_history(request):
-#     api = API()
-#     # initiating the API class
+        if not user.check_password(old_password):
+            return Response({'error': 'Incorrect old password'}, status=HTTP_400_BAD_REQUEST)
 
-#     ## sync
-#      # login in with sso token
-#     api.login('your_sso_token')
+        user.set_password(new_password)
+        user.save()
 
-#      # retrieving combat history
-#     hist = api.Warzone.combatHistory(platforms.PSN, User.gamer_tag) # returns data of type dict
-#     async def get_combat_history():
-#         # login in with sso token
-#         await api.loginAsync('your_sso_token')
+        return Response({'message': 'Password changed successfully'}, status=HTTP_200_OK)
 
-#         # retrieving combat history
-#         hist = await api.Warzone.combatHistoryAsync(platforms.PSN, "Username#1234") # returns data of type dict
+class UserCreateView(APIView):
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username')
+        password = request.data.get('password')
 
-#         # return results in json
-#         return JsonResponse(hist)
-    
-# def get_match_details(request):
-#     api = API()
-#     # initiating the API class
+        # Check if the username is already taken
+        if User.objects.filter(username=username).exists():
+            return Response({'error': 'Username already exists'}, status=HTTP_400_BAD_REQUEST)
 
-#     ## sync
-#      # login in with sso token
-#     api.login('your_sso_token')
+        # Create a new user
+        user = User.objects.create_user(username=username, password=password)
 
-#      # retrieving combat history
-#     hist = api.Warzone.combatHistory(platforms.Battlenet, User.gamer_tag) # returns data of type dict
-#     async def get_combat_history():
-#         # login in with sso token
-#         await api.loginAsync('your_sso_token')
+        # Log in the new user
+        login(request, user)
 
-#         # retrieving combat history
-#         hist = await api.Warzone.combatHistoryAsync(platforms.Battlenet, "Username#1234") # returns data of type dict
-
-#         # return results in json
-#         return JsonResponse(hist)
+        # Return tokens or other relevant information
+        return Response({'access': 'your_access_token', 'refresh': 'your_refresh_token'}, status=HTTP_201_CREATED)
