@@ -21,7 +21,7 @@ const UserForm = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:8000/user/users/create', formData);
+            const response = await axios.post('http://localhost:8000/user/users/create/', formData);
             setSuccessMessage('User created successfully!');
             setErrorMessage('');
             console.log('User created successfully:', response.data);
@@ -54,7 +54,7 @@ const UserForm = () => {
                     Gamer Tag:
                     <input type="text" name="gamer_tag" onChange={handleChange} />
                 </label><br />
-                <label for="platforms">Choose a platform:</label>
+                <label id="platforms">Choose a platform:</label>
                 <select id="platforms" name="cod_platform" onChange={handleChange}>
                     <option>Choose Your Platform</option>
                     <option value="all">All</option>

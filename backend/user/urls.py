@@ -19,5 +19,5 @@ urlpatterns = [
     path('current-user-id/', CurrentUserIdView.as_view(), name='current-user-id'),
     path('get-user-id-by-username/<str:username>/', GetUserIdByUsernameView.as_view(), name='get-user-id-by-username'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('register/', UserCreateView.as_view(), name='user-create'),
+    # path('register/', UserCreateView.as_view(), name='user-create'),
 ]

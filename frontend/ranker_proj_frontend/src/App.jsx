@@ -11,13 +11,16 @@ const App = () => {
 
     return (
         <div>
-          <div>
-            <CustomNavbar />
-          </div>
+            <div>
+                <CustomNavbar />
+            </div>
             {authenticated ? (
                 <WelcomePage username={username} />
             ) : (
-                <UserForm setAuthenticated={setAuthenticated} setUsername={setUsername} />
+                <UserForm
+                    setAuthenticated={setAuthenticated}
+                    setUsername={setUsername}
+                />
             )}
         </div>
     );

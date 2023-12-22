@@ -20,12 +20,24 @@ class UserListView(APIView):
         return Response(userSerializer.data)
 
 class UserCreateView(APIView):
-    def post(self,request):
-        userSerializer = UserSerializer(data=request.data)
-        if userSerializer.is_valid():
-            userSerializer.save()
-            return Response(userSerializer.data, status=HTTP_201_CREATED)
-        return Response(userSerializer.errors, status=HTTP_400_BAD_REQUEST)
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        # Create a new user
+        user_serializer = UserSerializer(data=request.data)
+        if user_serializer.is_valid():
+            user_serializer.save()
+
+            # Log in the new user
+            user = authenticate(request, username=username, password=password)
+            if user:
+                login(request, user)
+
+                # Return tokens or other relevant information
+                return Response({'access': 'your_access_token', 'refresh': 'your_refresh_token'}, status=HTTP_201_CREATED)
+
+        return Response(user_serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 class UserUpdateView(APIView):
     def put(self,request):
@@ -90,20 +102,20 @@ class ChangePasswordView(APIView):
 
         return Response({'message': 'Password changed successfully'}, status=HTTP_200_OK)
 
-class UserCreateView(APIView):
-    def post(self, request, *args, **kwargs):
-        username = request.data.get('username')
-        password = request.data.get('password')
+# class UserCreateView(APIView):
+#     def post(self, request, *args, **kwargs):
+#         username = request.data.get('username')
+#         password = request.data.get('password')
 
-        # Check if the username is already taken
-        if User.objects.filter(username=username).exists():
-            return Response({'error': 'Username already exists'}, status=HTTP_400_BAD_REQUEST)
+#         # Check if the username is already taken
+#         if User.objects.filter(username=username).exists():
+#             return Response({'error': 'Username already exists'}, status=HTTP_400_BAD_REQUEST)
 
-        # Create a new user
-        user = User.objects.create_user(username=username, password=password)
+#         # Create a new user
+#         user = User.objects.create_user(username=username, password=password)
 
-        # Log in the new user
-        login(request, user)
+#         # Log in the new user
+#         login(request, user)
 
-        # Return tokens or other relevant information
-        return Response({'access': 'your_access_token', 'refresh': 'your_refresh_token'}, status=HTTP_201_CREATED)
+#         # Return tokens or other relevant information
+#         return Response({'access': 'your_access_token', 'refresh': 'your_refresh_token'}, status=HTTP_201_CREATED)
