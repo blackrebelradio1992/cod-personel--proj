@@ -1,0 +1,24 @@
+<!-- modern_warfare_profile.html -->
+
+{% extends 'base.html' %}  <!-- Assuming you have a base template -->
+
+{% block content %}
+  <h2>Modern Warfare Profile</h2>
+  
+  <p>User: {{ user.user_name }}</p>
+  <p>Gamer Tag: {{ mw2_data.cod_gamer_tag }}</p>
+  <p>Kills: {{ mw2_data.kills }}</p>
+  <p>Deaths: {{ mw2_data.deaths }}</p>
+  <p>Kill/Death Ratio: {{ mw2_data.k_d_ratio }}</p>
+  <p>Avrage Kills per Game: {{ mw2_data.avg_kills_per_game }}</p>
+  <p>Wins: {{ mw2_data.wins }}</p>
+  <p>Losses: {{ mw2_data.losses }}</p>
+  <p>Win/Loss Ratio: {{ mw2_data.w_l_ratio }}</p>
+  <p>Games Played: {{ mw2_data.games_played }}</p>
+  <p>Highest Kill Streak: {{ mw2_data.highest_kill_streak }}</p>
+  <p>Most Kills in Game: {{ mw2_data.most_kill_in_game }}</p>
+  <p>Total Time Played: {{ mw2_data.total_time_played }}</p> 
+  <!-- Add other Modern Warfare data fields -->
+
+  <!-- ... other content ... -->
+{% endblock %}
