@@ -1,9 +1,11 @@
 from django.db import models
+from user.models import User
 # from backend/me/apps.py import User
 
 # Create your models here.
 
 class ModernWarfare2Data(models.Model):
+    user_name = models.CharField(max_length=255, default='Player')
     gamer_tag = models.CharField(max_length=50)
     time_played_start = models.DateTimeField(auto_now_add=True)
     time_played_end = models.DateTimeField(blank=True, null=True)
