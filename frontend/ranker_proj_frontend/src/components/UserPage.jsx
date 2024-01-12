@@ -112,7 +112,7 @@ const UserPage = ({ onDelete }) => {
   };
 
   return (
-    <div>
+    <div className="user-page centered-content">
       <h1>Edit User Information</h1>
       <div>
         <h2>Current User Information</h2>
@@ -130,7 +130,7 @@ const UserPage = ({ onDelete }) => {
             value={formData.user_name}
             onChange={handleChange}
           />
-          <button type="button" onClick={handleGetUserIdClick}>Get User ID</button>
+          <button className='metal' type="button" onClick={handleGetUserIdClick}>Get User ID</button>
         </label><br />
         <label>
           Gamer Tag:
@@ -159,12 +159,12 @@ const UserPage = ({ onDelete }) => {
             <option value="xbox">XBOX</option>
           </select>
         </label><br />
-        <button type="submit" disabled={loading}>
+        <button className='metal' type="submit" disabled={loading}>
           {loading ? 'Updating...' : 'Update User Info'}
         </button>
       </form>
       <div>
-        <button onClick={handleChangePasswordClick}>Change Password</button>
+        <button className='metal' onClick={handleChangePasswordClick}>Change Password</button>
       </div>
       {showChangePassword && (
         <div>
@@ -176,11 +176,11 @@ const UserPage = ({ onDelete }) => {
             <label>New Password: </label>
             <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
           </div>
-          <button onClick={handleConfirmPasswordChange}>Confirm Change</button>
+          <button className='metal' onClick={handleConfirmPasswordChange}>Confirm Change</button>
         </div>
       )}
       <div>
-        <button onClick={handleDeleteClick}>Delete Profile</button>
+        <button className='metal' onClick={handleDeleteClick}>Delete Profile</button>
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ const LoginPage = () => {
 
     try {
       const response = await axios.post('http://localhost:8000/user/token/', {
-        username: 'jodie0791',
+        username: 'jodie079',
         password: '1234',
       });
       // Handle successful response
@@ -75,7 +75,7 @@ const LoginPage = () => {
   // };    
 
   return (
-    <div>
+    <div className="login-page centered-content">
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
         <label>
@@ -86,7 +86,7 @@ const LoginPage = () => {
           Password:
           <input type="password" name="password" onChange={handleChange} />
         </label><br />
-        <button type="submit">Login</button>
+        <button className='metal' type="submit">Login</button>
       </form>
     </div>
   );

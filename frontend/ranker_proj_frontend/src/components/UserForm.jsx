@@ -32,8 +32,10 @@ const UserForm = () => {
         }
     };
 
+    
+
     return (
-        <div>
+        <div className="user-form centered-content">
             <h1>User Registration</h1>
             {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
@@ -64,7 +66,7 @@ const UserForm = () => {
                     <option value="uno">Uno</option>
                     <option value="xbox">XBOX</option>
                 </select><br />
-                <button type="submit">Submit</button>
+                <button className='metal' type="submit">Submit</button>
             </form>
         </div>
     );

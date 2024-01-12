@@ -62,7 +62,7 @@ const ModernWarfare2Component = () => {
   };
 
   return (
-    <div>
+    <div className="mw2-page centered-content">
       <h1>Modern Warfare 2 Data</h1>
       {/* Display cards for each data item */}
       {data.map(item => (
@@ -82,7 +82,7 @@ const ModernWarfare2Component = () => {
           <input type="text" value={formData.gamer_tag} onChange={(e) => setFormData({ ...formData, gamer_tag: e.target.value })} />
         </label>
         {/* Add other form fields as needed */}
-        <button type="submit">Submit</button>
+        <button className='metal' type="submit">Submit</button>
       </form>
     </div>
   );
