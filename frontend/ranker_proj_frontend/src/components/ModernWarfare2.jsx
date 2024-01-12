@@ -1,6 +1,7 @@
 // ModernWarfare2Component.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import UserStats from './ModernWarfare2PlayerStats';
 
 const ModernWarfare2Component = () => {
   const [data, setData] = useState([]);
@@ -84,6 +85,9 @@ const ModernWarfare2Component = () => {
         {/* Add other form fields as needed */}
         <button className='metal' type="submit">Submit</button>
       </form>
+      <div>
+        <UserStats />
+      </div>
     </div>
   );
 };

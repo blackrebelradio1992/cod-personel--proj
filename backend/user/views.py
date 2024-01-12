@@ -13,15 +13,9 @@ from rest_framework.status import HTTP_201_CREATED, HTTP_202_ACCEPTED, HTTP_400_
 from django.contrib.auth import authenticate, login
 from rest_framework.decorators import api_view
 from cod_api import API, platforms
-
+from rest_framework_simplejwt.tokens import RefreshToken
 # Create your views here.
-@api_view(['POST'])
-def register_user(request):
-    serializer = UserSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_BAD_REQUEST)
+
 
 @api_view(['GET'])
 def get_cod_data(request, user_id):
@@ -33,6 +27,24 @@ def get_cod_data(request, user_id):
         return JsonResponse(cod_data)
     except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['POST'])
+def cod_mw2_data_view(request):
+    # Extract user data from the request
+    username = request.data.get('username')
+    platform = request.data.get('platform')
+    sso_token = request.data.get('sso_token')
+
+    # Initialize COD API
+    api = API()
+    api.login(sso_token)
+
+    # Fetch data from COD API (example: lifetime stats)
+    try:
+        cod_data = api.ModernWarfare2.fullData(platform, username)
+        return JsonResponse(cod_data)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
 
 class UserListView(APIView):
     def get(self,request):
@@ -42,23 +54,23 @@ class UserListView(APIView):
 
 class UserCreateView(APIView):
     def post(self, request, *args, **kwargs):
-        username = request.data.get('username')
-        password = request.data.get('password')
-
-        # Create a new user
         user_serializer = UserSerializer(data=request.data)
         if user_serializer.is_valid():
             user_serializer.save()
 
-            # Log in the new user
-            user = authenticate(request, username=username, password=password)
+            # Authenticate the user
+            user = authenticate(username=request.data.get('user_name'), password=request.data.get('password'))
             if user:
                 login(request, user)
 
-                # Return tokens or other relevant information
-                return Response({'access': 'your_access_token', 'refresh': 'your_refresh_token'}, status=HTTP_201_CREATED)
+                # Generate JWT tokens
+                refresh = RefreshToken.for_user(user)
+                return Response({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                }, status=status.HTTP_201_CREATED)
 
-        return Response(user_serializer.errors, status=HTTP_400_BAD_REQUEST)
+        return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserUpdateView(APIView):
     def put(self,request):

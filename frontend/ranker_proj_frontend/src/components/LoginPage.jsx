@@ -1,12 +1,14 @@
-// LoginPage.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
+  const [loginError, setLoginError] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -14,77 +16,34 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // try {
-    //   const response = await axios.post('http://localhost:8000/user/token/', formData);
-    //   // Handle successful login, e.g., redirect to user dashboard
-    //   console.log('Login successful:', response.data);
-    // } catch (error) {
-    //   // Handle login error, e.g., show an error message
-    //   console.error('Login failed:', error);
-    // }
+    setLoginError(''); // Reset login error
 
     try {
-      const response = await axios.post('http://localhost:8000/user/token/', {
-        username: 'jodie079',
-        password: '1234',
-      });
-      // Handle successful response
-      console.log(response.data);
+      const response = await axios.post('http://localhost:8000/user/token/', formData);
+      console.log('Login successful:', response.data);
+
+      localStorage.setItem('accessToken', response.data.access);
+      localStorage.setItem('refreshToken', response.data.refresh);
+
+      navigate('/profile'); // Redirect to the profile page
     } catch (error) {
-      // Handle error
-      console.error('Error:', error.message);
+      console.error('Login failed:', error);
+      setLoginError('Login failed. Please check your username and password.');
     }
-    
   };
-  
-  // const handleLogin = async (username, password) => {
-  //   try {
-  //     const response = await axios.post('http://localhost:8000/user/token/', {
-  //       username: username,
-  //       password: password,
-  //     });
-  
-  //     // Store the token in local storage or cookies for future requests
-  //     localStorage.setItem('accessToken', response.data.access);
-  //     localStorage.setItem('refreshToken', response.data.refresh);
-  
-  //     // Redirect to the user page or update the state to render user information
-  //     // You may use React Router for redirection
-  //   } catch (error) {
-  //     console.error('Login failed', error);
-  //   }
-  // };
-  
-  // const handleRegister = async (username, password) => {
-  //   try {
-  //     const response = await axios.post('http://localhost:8000/user/register/', {
-  //       username: username,
-  //       password: password,
-  //     });
-  
-  //     // Store the token in local storage or cookies for future requests
-  //     localStorage.setItem('accessToken', response.data.access);
-  //     localStorage.setItem('refreshToken', response.data.refresh);
-  
-  //     // Redirect to the user page or update the state to render user information
-  //     // You may use React Router for redirection
-  //   } catch (error) {
-  //     console.error('Registration failed', error);
-  //   }
-  // };    
 
   return (
     <div className="login-page centered-content">
       <h1>Login</h1>
+      {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
       <form onSubmit={handleSubmit}>
         <label>
           Username:
-          <input type="text" name="username" onChange={handleChange} />
+          <input type="text" name="username" value={formData.username} onChange={handleChange} />
         </label><br />
         <label>
           Password:
-          <input type="password" name="password" onChange={handleChange} />
+          <input type="password" name="password" value={formData.password} onChange={handleChange} />
         </label><br />
         <button className='metal' type="submit">Login</button>
       </form>

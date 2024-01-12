@@ -7,6 +7,7 @@ import UserPage from './components/UserPage.jsx';
 import ModernWarfare2Component from './components/ModernWarfare2.jsx';
 import LoginPage from './components/LoginPage.jsx';
 
+
 const router = createBrowserRouter([
   {
     path: '/',

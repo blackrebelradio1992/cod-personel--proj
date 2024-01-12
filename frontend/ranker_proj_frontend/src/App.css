@@ -93,6 +93,12 @@ input[type="text"], input[type="password"] {
     /* Other styles for UserPage */
 }
 
+.user-stats {
+    background-color: black;
+    /* Other styles for UserPage */
+}
+
+
 .centered-content {
     display: flex;
     flex-direction: column;
