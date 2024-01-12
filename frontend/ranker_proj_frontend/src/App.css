@@ -1,42 +1,109 @@
-/* #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+@import url(https://fonts.googleapis.com/css?family=Droid+Sans:regular,bold);
+
+html {
+  font: 62.5%/1 "Droid Sans", "Lucida Sans Unicode", "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+  background-color: black; /* Set background color to black */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+body {
+  margin: 0; /* Remove default margin */
+  color: orange; /* Set text color to orange */
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Center content */
+.main-content {
+  text-align: center; /* Center text */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Full height */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Metal style for buttons */
+button.metal {
+    position: relative;
+    margin: 20px auto;
+    outline: none;
+    
+    font: bold 2em/2em "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+    text-align: center;
+    color: hsla(0,0%,20%,1);
+    text-shadow: hsla(0,0%,40%,.5) 0 -1px 0, hsla(0,0%,100%,.6) 0 2px 1px;
+    
+    background-color: hsl(0,0%,90%);
+    box-shadow: inset hsla(0,0%,15%,  1) 0  0px 0px 4px, /* border */
+      inset hsla(0,0%,15%, .8) 0 -1px 5px 4px, /* soft SD */
+      inset hsla(0,0%,0%, .25) 0 -1px 0px 7px, /* bottom SD */
+      inset hsla(0,0%,100%,.7) 0  2px 1px 7px, /* top HL */
+      
+      hsla(0,0%, 0%,.15) 0 -5px 6px 4px, /* outer SD */
+      hsla(0,0%,100%,.5) 0  5px 6px 4px; /* outer HL */ 
+    
+    transition: color .2s;
+    /* Adjust width to match text input */
+    width: 100%; /* Full width */
+    max-width: 300px; /* Maximum width, adjust as needed */
+}
+  
+/* Style for text input */
+input[type="text"], input[type="password"] {
+    width: 100%;
+    max-width: 300px; /* Match button width */
+    margin: 10px auto; /* Centering */
 }
 
-.card {
-  padding: 2em;
+/* Override text color for navbar if needed */
+.navbar {
+    color: initial; /* Or any specific color */
 }
-
-.read-the-docs {
-  color: #888;
+/* * {
+    background-color: black;
 } */
+.navbar-custom {
+    background-color: white; /* Set your desired color */
+}
+.home-page {
+    background-color: black;
+    /* Other styles for HomePage */
+}
+
+.user-page {
+    background-color: black;
+    /* Other styles for UserPage */
+}
+
+.user-form {
+    background-color: black;
+    /* Other styles for HomePage */
+}
+
+.mw2-page {
+    background-color: black;
+    /* Other styles for UserPage */
+}
+
+.login-page {
+    background-color: black;
+    /* Other styles for HomePage */
+}
+
+.user-welcome {
+    background-color: black;
+    /* Other styles for UserPage */
+}
+
+.user-stats {
+    background-color: black;
+    /* Other styles for UserPage */
+}
+
+
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+}
