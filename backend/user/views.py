@@ -56,19 +56,21 @@ class UserCreateView(APIView):
     def post(self, request, *args, **kwargs):
         user_serializer = UserSerializer(data=request.data)
         if user_serializer.is_valid():
-            user_serializer.save()
+            # user_serializer.save()
 
             # Authenticate the user
-            user = authenticate(username=request.data.get('user_name'), password=request.data.get('password'))
-            if user:
-                login(request, user)
+            # user = authenticate(username=request.data.get('user_name'), password=request.data.get('password'))
+            # if user:
+            user = User.objects.create_user(**request.data)
+            login(request, user)
 
-                # Generate JWT tokens
-                refresh = RefreshToken.for_user(user)
-                return Response({
-                    'refresh': str(refresh),
-                    'access': str(refresh.access_token),
-                }, status=status.HTTP_201_CREATED)
+            # Generate JWT tokens
+            refresh = Token.objects.create(user=user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }, status=status.HTTP_201_CREATED)
+        print(user_serializer.errors)
 
         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
